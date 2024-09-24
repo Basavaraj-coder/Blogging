@@ -30,7 +30,7 @@ class AuthField extends StatelessWidget {
         }if (textHint == "Email" && !_validateEmail(value)) {
           return "Please enter a valid email";
         }if(textHint == "Password" && !_validatePassword(value)){
-          return "Password should be of More than 10 characters";
+          return "Password should be of More than 10 characters \nand it should contain Caps/Small/special_symbols and number";
         }
         return null;
       },

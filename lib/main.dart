@@ -1,7 +1,12 @@
 import 'package:blogging/Core/Secrets/supabase_secrets.dart';
 import 'package:blogging/Core/theme/theme.dart';
+import 'package:blogging/Features/Auth/Data/DataSources/auth_remote_data_source.dart';
+import 'package:blogging/Features/Auth/Data/Repositories/auth_repository_impl.dart';
+import 'package:blogging/Features/Auth/Domain/usecase/user_sign_up.dart';
 import 'package:blogging/Features/Auth/Presentation/Pages/login_page.dart';
+import 'package:blogging/Features/Auth/Presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 //need url and anon key to connect with supabase
@@ -12,10 +17,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // async and await for supabase
- final supabase = await Supabase.initialize(url: Secrets.url, anonKey: Secrets.anonKey);
+  final supabase =
+      await Supabase.initialize(url: Secrets.url, anonKey: Secrets.anonKey);
 //supabase initilizing part is done
 
-  runApp(const MyApp());
+  //blocprovider helps us to register bloc,
+  // -- and since we will be creating multiple bloc so need use multiblocprovider
+
+  //dependency injection is part where you need to add instance externally,
+  // to avoid repetition of code
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(
+      create: (_) => AuthBloc(
+        userSignup: UserSignup(
+          AuthRepositoryImpl(AuthRemoteDataSourceImpl(supabase.client)),
+        ),
+      ),
+    )
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

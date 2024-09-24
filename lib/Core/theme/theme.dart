@@ -26,6 +26,9 @@ class AppTheme{
       enabledBorder: _border(), //assigned OutLinedInputBorder to _border
       focusedBorder: _border(AppPallete.gradient2),//now here i want to change some color of border while focused
       //so convert _border to function
+      errorBorder: _border(),
+      focusedErrorBorder: _border()
     ),
+
   );
 }
